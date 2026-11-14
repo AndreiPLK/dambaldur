@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Действующие лица</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ruslan+Display&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Neucha&display=swap">
+<style>
+/* Layout: книжный разворот «Действующие лица» — кремовая бумага, у каждого героя портрет в рамке и короткий книжный текст; чередуем стороны. Один «бумажный» вид. */
+:root{
+  --paper:#f3ead6; --ink:#2b2117; --dim:#6f5f49; --rule:#cdb995; --lava:#b4501d;
+  --f-title:"Ruslan Display","PT Serif",Georgia,serif; --f-body:"PT Serif",Georgia,serif; --f-hand:"Neucha","PT Serif",Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding-block:56px 96px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+header{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.kick{font-family:var(--f-hand);color:var(--lava);font-size:17px;letter-spacing:.08em}
+h1{font-family:var(--f-title);font-weight:400;font-size:clamp(34px,6vw,58px);margin:0;line-height:1.05}
+.orn{width:120px;height:1px;background:var(--rule);position:relative}
+.orn::after{content:"✦";position:absolute;left:50%;top:-12px;transform:translateX(-50%);background:var(--paper);padding:0 10px;color:var(--lava)}
+.intro{max-width:36em;font-style:italic;color:var(--dim)}
+.hero{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:center}
+.hero:nth-of-type(even){grid-template-columns:1fr 240px}
+.hero:nth-of-type(even) figure{order:2}
+figure{margin:0;background:#fffaf0;padding:10px;border:1px solid var(--rule);box-shadow:0 8px 24px rgba(70,50,20,.15)}
+figure img{display:block;width:100%;height:auto}
+.txt{display:flex;flex-direction:column;gap:8px;min-width:0}
+h2{font-family:var(--f-title);font-weight:400;font-size:clamp(26px,4vw,36px);margin:0;line-height:1.1}
+.role{font-family:var(--f-hand);font-size:18px;color:var(--lava)}
+.txt p{margin:0}
+.quirk{font-family:var(--f-hand);font-size:17px;color:var(--dim);border-top:1px dashed var(--rule);padding-top:8px}
+.team{text-align:center;font-style:italic;color:var(--dim);max-width:34em;margin:0 auto}
+@media (max-width:640px){.hero,.hero:nth-of-type(even){grid-template-columns:1fr}.hero:nth-of-type(even) figure{order:0}figure{max-width:260px;margin:0 auto}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="kick">Дамбалдур Трампампур · книга первая</span>
+  <h1>Действующие лица</h1>
+  <div class="orn" aria-hidden="true"></div>
+  <figure class="teamshot" style="margin:8px 0 0;max-width:100%"><img src="img/team.jpg" alt="Вся команда на горной тропе на закате"></figure>
+  <p class="intro">Пятеро путников в мире, где карта ещё не дорисована. Ни один из них не знает, кем станет. Зато все точно знают, у кого бутерброды.</p>
+</header>
+
+<section class="hero">
+  <figure><img src="img/dambaldur.jpg" alt="Дамбалдур Трампампур"></figure>
+  <div class="txt">
+    <h2>Дамбалдур Трампампур</h2><span class="role">дворф-воин, умеет ковать</span>
+    <p>Рыжая борода — его гордость, нос — его гордость поменьше. Ворчит на всё на свете: на плохую ковку, на сложную магию и на тех, кто не любит бутерброды. Но если ты стал его другом — он за тебя пробьёт любую стену. А иногда и потолок. Головой.</p>
+    <p class="quirk">Хлопнет, топнет — и случится маленькое чудо. Боится только одного: что бутерброд закончится.</p>
+  </div>
+</section>
+
+<section class="hero">
+  <figure><img src="img/mage.jpg" alt="Маг Лириан"></figure>
+  <div class="txt">
+    <h2>Лириан</h2><span class="role">тихий маг, капитан команды</span>
+    <p>Умный, спокойный, немногословный. Улыбается, когда шутят другие, а сам шутит так тихо, что не все замечают. Его магия странная: он делает вещи тяжёлыми или лёгкими и плетёт цепи из чернильной тьмы. Мечтает, чтобы гномы, эльфы и все-все наконец подружились.</p>
+    <p class="quirk">Пальцы всегда в чернилах. В кармане — бутерброд, который Дамбалдур заставил его съесть.</p>
+  </div>
+</section>
+
+<section class="hero">
+  <figure><img src="img/elira.jpg" alt="Элира"></figure>
+  <div class="txt">
+    <h2>Элира</h2><span class="role">эльфийка-лучница, следопыт</span>
+    <p>Выглядит юной, а говорит иногда как древняя бабушка: «в мои-то годы…». Всегда знает, куда идти, где спрятаться и откуда стрелять. Однажды она забыла всех своих старых друзей — и теперь бережёт новых больше всего на свете.</p>
+    <p class="quirk">В косичке — бусина за каждого друга. В кармане — кусочек бутерброда, утащенный у Дамбалдура.</p>
+  </div>
+</section>
+
+<section class="hero">
+  <figure><img src="img/teona.jpg" alt="Теона"></figure>
+  <div class="txt">
+    <h2>Теона</h2><span class="role">храмовница света, самая младшая</span>
+    <p>Добрая, вежливая, лучшая ученица своего храма. Лечит светом и варит снадобья из трав. А ещё у неё моргенштерн больше её самой, с огненным сердцем внутри. Она почти всегда промахивается — и поэтому научилась промахиваться нарочно, чтобы попасть.</p>
+    <p class="quirk">После каждого удара извиняется. Даже перед чудищами.</p>
+  </div>
+</section>
+
+<section class="hero">
+  <figure><img src="img/orc.jpg" alt="Орк-маг"></figure>
+  <div class="txt">
+    <h2>Орк-маг</h2><span class="role">новый друг, маг и шаман</span>
+    <p>Огромный, спокойный, бродит сам по себе и разговаривает с камнями. Колдует по-настоящему — только половину своих заклинаний сам не понимает. Хотел вызвать бурю — получил тучку, которая льёт суп прямо в котёл. Отличный повар и вечный соперник Дамбалдура в споре, чей бутерброд лучше.</p>
+    <p class="quirk">Книгу заклинаний читает вверх ногами. Работает.</p>
+  </div>
+</section>
+
+<p class="team">Вместе они — гильдия, которой ещё нет. Но скоро будет.</p>
+</div>
+
+</body>
+</html>

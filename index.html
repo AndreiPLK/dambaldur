@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Дамбалдур Трампампур</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ruslan+Display&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Neucha&display=swap">
+<style>
+/* Layout: старая книга — страницы-листы пергамента друг под другом; титул в красно-чёрной печати, рамки-ленты с рунами, буквицы. Один «бумажный» вид. */
+:root{
+  --desk:#2a2219; --page:#f1e6cc; --page-edge:#d9c69e; --ink:#24190f; --dim:#6e5a40; --red:#9b2a1c; --gold:#a8812f;
+  --f-title:"Ruslan Display","Old Standard TT",Georgia,serif; --f-body:"Old Standard TT",Georgia,"Times New Roman",serif; --f-hand:"Neucha","Old Standard TT",serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:var(--f-body);font-size:19px;line-height:1.6}
+.book{max-width:820px;margin:0 auto;padding-block:40px 80px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+.page{position:relative;background:var(--page);padding:clamp(28px,6vw,64px) clamp(22px,6vw,72px);
+  box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 90px rgba(140,100,40,.25);
+  background-image:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.35),transparent 60%),radial-gradient(ellipse at 70% 90%,rgba(120,80,20,.14),transparent 60%)}
+.frame{border:2px solid var(--ink);outline:1px solid var(--ink);outline-offset:5px;padding:clamp(20px,5vw,48px) clamp(14px,4vw,40px);display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.runes{font-family:"Segoe UI Historic","Noto Sans Runic",serif;letter-spacing:.35em;color:var(--red);font-size:15px;width:100%;overflow:hidden;white-space:nowrap;text-align:center}
+h1{font-family:var(--f-title);font-weight:400;margin:0;line-height:1.02;font-size:clamp(38px,8.5vw,76px);color:var(--ink)}
+h1 span{display:block;color:var(--red);font-size:.62em;margin-top:.15em}
+.sub{font-style:italic;font-size:clamp(18px,2.6vw,22px);color:var(--dim);max-width:30em}
+.mark{font-family:var(--f-title);font-size:26px;color:var(--red)}
+.small{font-variant:small-caps;letter-spacing:.12em;font-size:15px;color:var(--dim)}
+.orn{color:var(--gold);font-size:22px;letter-spacing:.6em}
+.plate{margin:0;display:flex;flex-direction:column;gap:12px;align-items:center}
+.plate img{display:block;width:100%;height:auto;border:1px solid var(--ink);box-shadow:0 0 0 6px var(--page),0 0 0 7px var(--ink)}
+.plate figcaption{font-style:italic;color:var(--dim);font-size:16px;text-align:center}
+h2{font-family:var(--f-title);font-weight:400;font-size:clamp(26px,4.5vw,38px);margin:0;text-align:center}
+.dedic{text-align:center;font-style:italic;font-size:21px;max-width:24em;margin:0 auto;line-height:1.7}
+.toc{list-style:none;margin:0 auto;padding:0;max-width:30em;display:flex;flex-direction:column;gap:10px}
+.toc li{display:flex;align-items:baseline;gap:10px}
+.toc .n{font-family:var(--f-title);color:var(--red);min-width:2.2em}
+.toc .t{flex:1;border-bottom:1px dotted var(--dim)}
+.toc .p{font-variant-numeric:tabular-nums;color:var(--dim)}
+.note{font-family:var(--f-hand);font-size:15px;color:var(--dim);text-align:center}
+.pre p{margin:0 0 1em;text-indent:1.4em;text-align:justify;hyphens:auto}
+.pre p.first{text-indent:0}
+.pre p.first::first-letter{float:left;font-family:var(--f-title);font-size:3.4em;line-height:.85;padding:.06em .1em 0 0;color:var(--red)}
+.cast{display:flex;flex-direction:column;gap:28px}
+.who{display:grid;grid-template-columns:150px 1fr;gap:22px;align-items:center}
+.who img{width:100%;height:auto;display:block;border:1px solid var(--ink);box-shadow:0 0 0 4px var(--page),0 0 0 5px var(--ink)}
+.who h3{font-family:var(--f-title);font-weight:400;font-size:26px;margin:0}
+.who .r{font-style:italic;color:var(--red);font-size:16px}
+.who p{margin:6px 0 0;font-size:17px}
+@media (max-width:560px){.who{grid-template-columns:96px 1fr;gap:14px}.who h3{font-size:21px}}
+</style>
+
+<main class="book">
+
+<section class="page" aria-label="Титул">
+  <div class="frame">
+    <div class="runes" aria-hidden="true">ᚦᚨᛗᛒᚨᛚᛞᚢᚱ ᛫ ᛏᚱᚨᛗᛈᚨᛗᛈᚢᚱ ᛫ ᚦᚨᛗᛒᚨᛚᛞᚢᚱ ᛫ ᛏᚱᚨᛗᛈᚨᛗᛈᚢᚱ</div>
+    <p class="small">повесть о ворчливом гноме, верных друзьях и горе, которая его ждала</p>
+    <h1>Дамбалдур Трампампур<span>и последний бутерброд</span></h1>
+    <div class="orn" aria-hidden="true">✦ ✦ ✦</div>
+    <p class="sub">в которой ворчливый воин, тихий маг, эльфийка-следопыт, храмовница с огненным моргенштерном и орк, не понимающий собственных заклинаний, отправляются в путь — и находят дом там, где совсем не ждали</p>
+    <p class="mark">❦</p>
+    <p class="small">книга первая</p>
+    <div class="runes" aria-hidden="true">ᚢᚾᛞ ᛫ ᚦᛖ ᛫ ᛗᚨᛈ ᛫ ᛁᛋ ᛫ ᚾᛟᛏ ᛫ ᚠᛁᚾᛁᛋᚺᛖᛞ</div>
+  </div>
+</section>
+
+<section class="page" aria-label="Фронтиспис">
+  <figure class="plate"><img src="img/team.jpg" alt="Пятеро героев на горной тропе на закате"><figcaption>Пятеро путников у развилки, где тропа уходит в белое пятно</figcaption></figure>
+</section>
+
+<section class="page" aria-label="Посвящение">
+  <p class="dedic">Моим детям,<br>которые слушали эту историю первыми<br>и всегда спрашивали: «А что было дальше?»</p>
+</section>
+
+<section class="page" aria-label="Содержание">
+  <h2>Содержание</h2>
+  <div class="orn" style="text-align:center" aria-hidden="true">✦</div>
+  <ol class="toc">
+    <li><span class="n">I</span><span class="t">Бутерброды кончились раньше горы</span><span class="p">·</span></li>
+    <li><span class="n">II</span><span class="t">Экзамен для новичков</span><span class="p">·</span></li>
+    <li><span class="n">III</span><span class="t">Дорога, которой нет</span><span class="p">·</span></li>
+    <li><span class="n">IV</span><span class="t">Провал</span><span class="p">·</span></li>
+    <li><span class="n">V</span><span class="t">Дамбалдур Великий</span><span class="p">·</span></li>
+  </ol>
+  <p class="note">черновые названия глав — поменяем, когда главы будут написаны</p>
+</section>
+
+<section class="page" aria-label="Карта">
+  <h2>Карта</h2>
+  <div class="orn" style="text-align:center;margin-bottom:14px" aria-hidden="true">✦</div>
+  <figure class="plate"><img src="img/map.jpg" alt="Карта мира: гора гномов, эльфийский лес, людской город; справа карта обрывается в белое пятно, на краю стоят пятеро героев"><figcaption>Земли, где начинается наша история</figcaption></figure>
+</section>
+
+<section class="page pre" aria-label="О мире">
+  <h2>Пара слов о мире</h2>
+  <div class="orn" style="text-align:center;margin-bottom:18px" aria-hidden="true">✦</div>
+  <p class="first">Есть на свете земли надёжные, как гномья кладка: их давно нарисовали на картах, по ним ходят телеги, в них пекут хлеб и спорят о соседях. Там стоят людские королевства, шумят эльфийские леса, а в горе-вулкане живут гномы — народ ворчливый, сильный и очень любящий бутерброды.</p>
+  <p>Но бывает и так: стоит земле остаться без присмотра, стоит в ней завестись чудищам — и она начинает пропадать с карты. Сначала бледнеет, потом становится белым пятном. Тропы в белых пятнах переползают с места на место, а что там водится — не знает никто.</p>
+  <p>Для таких мест и существует гильдия авантюристов. Её люди уходят в белые пятна, чтобы открыть их заново, — и туда, вслед за ними, снова приходят жить. Об одних таких путниках и пойдёт рассказ.</p>
+</section>
+
+<section class="page" aria-label="Действующие лица">
+  <h2>Действующие лица</h2>
+  <div class="orn" style="text-align:center;margin-bottom:18px" aria-hidden="true">✦</div>
+  <div class="cast">
+    <div class="who"><img src="img/dambaldur.jpg" alt="Дамбалдур"><div><h3>Дамбалдур Трампампур</h3><span class="r">дворф-воин, умеющий ковать</span><p>Рыжая борода, огромный нос и огромное сердце. Ворчит на всё на свете, кроме бутербродов и друзей.</p></div></div>
+    <div class="who"><img src="img/mage.jpg" alt="Лириан"><div><h3>Лириан</h3><span class="r">тихий маг, капитан</span><p>Делает вещи тяжёлыми и лёгкими, плетёт цепи из чернильной тьмы. Улыбается, когда шутят другие.</p></div></div>
+    <div class="who"><img src="img/elira.jpg" alt="Элира"><div><h3>Элира</h3><span class="r">эльфийка-лучница, следопыт</span><p>Всегда знает, куда идти. Бережёт друзей больше всего на свете — и таскает кусочки чужих бутербродов.</p></div></div>
+    <div class="who"><img src="img/teona.jpg" alt="Теона"><div><h3>Теона</h3><span class="r">храмовница света</span><p>Лечит светом, а моргенштерном с огненным сердцем промахивается нарочно, чтобы попасть. И всегда извиняется.</p></div></div>
+    <div class="who"><img src="img/orc.jpg" alt="Орк-маг"><div><h3>Орк-маг</h3><span class="r">новый друг</span><p>Колдует по-настоящему, но половину сам не понимает. Хотел бурю — получил тучку, которая льёт суп.</p></div></div>
+  </div>
+</section>
+
+</main>
+
+</body>
+</html>
