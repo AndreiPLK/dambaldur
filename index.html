@@ -751,89 +751,53 @@ h2.chap{font-size:clamp(40px,7vw,64px);color:var(--red)}
 <p>Точно такой же, как руна у него на груди.</p>
 </section>
 <section class="page" data-mood="city" aria-label="Продолжение следует">
-  <div class="frame"><div class="orn" aria-hidden="true">✦</div><p class="small">продолжение следует</p><p class="note">глава четвёртая скоро</p><p><a href="#top" style="color:var(--red)">↑ к началу книги</a></p></div>
+  <div class="frame"><div class="orn" aria-hidden="true">✦</div><p class="small">продолжение следует</p><p class="note">глава четвёртая скоро</p><p><a href="#top" style="color:var(--red)">↑ к началу книги</a></p><p class="small" style="margin-top:2em;opacity:.75">Музыка: Kevin MacLeod (incompetech.com), лицензия CC BY 4.0: «Teller of the Tales», «Achaidh Cheide», «Frost Waltz», «Galway», «Midnight Tale», «Thatched Villagers», «Master of the Feast», «Minstrel Guild».</p></div>
 </section>
 </main>
 <button id="mus" type="button" aria-label="Музыка"><span class="ic">♪</span><span class="lb"><b>Музыка</b><i>нажми, чтобы включить</i></span><input type="range" min="0" max="100" value="55" aria-label="Громкость"></button>
-<script>// Тихий саундтрек книги: своя генеративная музыка (Web Audio), отдельная тема на каждую часть главы.
+<script>// Саундтрек книги: живые записи (Kevin MacLeod, incompetech.com, CC BY 4.0), своя тема на каждую часть главы.
 (function(){
 const btn=document.getElementById('mus'), vol=btn.querySelector('input'), lbB=btn.querySelector('b'), lbI=btn.querySelector('i'), ic=btn.querySelector('.ic');
-let ctx=null, master, verb, on=false, cur=null, buses={}, timer=null;
-const N=n=>440*Math.pow(2,(n-69)/12);
-// ноты: midi
-const NAMES={title:'Пролог',forest:'Снежный лес',night:'Ночь в горах',fight:'Снежные тролли',mountain:'Гора',farm:'Ферма',tavern:'Таверна «Гусь и корона»',city:'Ратвальд'};
-const M={
- title:   {bpm:60, steps:8,  chords:[[50,57,62,65],[46,53,62,65],[48,55,60,64],[45,52,61,64]], pad:.5, box:.35, wind:0, bell:.25},
- forest:  {bpm:66, steps:8,  chords:[[50,57,62,65],[46,53,58,65],[41,53,57,60],[48,55,60,64]], pad:.45, box:.55, wind:.18},
- night:   {bpm:52, steps:8,  chords:[[45,52,57,60],[41,48,57,60],[40,47,55,59],[45,52,57,64]], pad:.35, box:.15, wind:.32, bell:.3},
- fight:   {bpm:126,steps:16, chords:[[38,50,53,57],[34,46,50,53],[36,48,52,55],[38,50,53,57]], pad:.28, drums:1, ost:[38,38,50,38,41,38,48,38]},
- mountain:{bpm:46, steps:8,  chords:[[38,45,57,62,64],[43,50,58,62],[38,45,57,62,65],[45,52,57,61]], pad:.55, drone:[26,33], horn:[[0,57],[2,62],[3,64],[4,65],[6,64],[7,62]], clink:1},
- farm:    {bpm:104,steps:8,  chords:[[43,55,59,62],[48,55,60,64],[50,54,57,62],[43,55,59,62]], pad:.25, pluck:1},
- tavern:  {bpm:138,steps:12, chords:[[38,50,54,57],[38,50,54,57],[36,48,52,55],[38,50,54,57]], pad:.18, jig:[74,72,69,71,69,67, 69,74,74,76,74,72, 72,71,69,67,69,71, 69,66,62,64,66,69], tamb:1},
- city:    {bpm:88, steps:8,  chords:[[48,55,64,67],[43,55,62,67],[45,52,60,64],[41,53,60,65]], pad:.4, bell:.5, box:.3}
-};
-function init(){
- ctx=new (window.AudioContext||window.webkitAudioContext)();
- master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination);
- const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-20; comp.connect(master);
- verb=ctx.createConvolver(); const len=ctx.sampleRate*3.2, ir=ctx.createBuffer(2,len,ctx.sampleRate);
- for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);}
- verb.buffer=ir; const vg=ctx.createGain(); vg.gain.value=.55; verb.connect(vg); vg.connect(comp);
- master._in=comp;
- noiseBuf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate); const nd=noiseBuf.getChannelData(0); for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
- for(const k in M){const g=ctx.createGain(); g.gain.value=0; g.connect(comp); const s=ctx.createGain(); s.gain.value=1; s.connect(verb); g._send=s; buses[k]={g,step:0,next:0,wind:null};}
+const NAMES={title:'Пролог',forest:'Снежный лес',night:'Ночь в горах',fight:'Драка',mountain:'Гора',farm:'Ферма',tavern:'Таверна «Гусь и корона»',city:'Ратвальд'};
+const FADE=2.5;
+let ctx=null, master=null, on=false, cur=null; const tr={};
+function track(k){
+ if(tr[k]) return tr[k];
+ const a=new Audio('music/'+k+'.mp3'); a.loop=true; a.preload='auto';
+ const t={a,g:null}; tr[k]=t;
+ if(ctx){ const s=ctx.createMediaElementSource(a); t.g=ctx.createGain(); t.g.gain.value=0; s.connect(t.g); t.g.connect(master); }
+ return t;
 }
-let noiseBuf;
-function out(k,node,wet){node.connect(buses[k].g); if(wet){const w=ctx.createGain(); w.gain.value=wet; node.connect(w); w.connect(buses[k].g._send);} }
-function env(g,t,a,peak,d){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);}
-function pad(k,notes,t,dur,lvl){notes.forEach((n,i)=>{for(const det of [-7,7]){const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();
-  o.type=i===0?'triangle':'sawtooth'; o.frequency.value=N(n); o.detune.value=det; f.type='lowpass'; f.frequency.value=i===0?500:1100; f.Q.value=.3;
-  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(lvl*.028,t+dur*.35); g.gain.linearRampToValueAtTime(0,t+dur*1.05);
-  o.connect(f);f.connect(g);out(k,g,.9);o.start(t);o.stop(t+dur*1.1);}});}
-function box(k,n,t,lvl,type){const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain();
-  o.type=type||'sine'; o.frequency.value=N(n); o2.type='sine'; o2.frequency.value=N(n)*4.02;
-  env(g,t,.004,lvl*.16,1.6); env(g2,t,.002,lvl*.04,.25); o.connect(g);o2.connect(g2);out(k,g,.8);out(k,g2,.8);o.start(t);o2.start(t);o.stop(t+2);o2.stop(t+.5);}
-function pluck(k,n,t,lvl,dec){const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='sawtooth';o.frequency.value=N(n);
-  f.type='lowpass';f.frequency.setValueAtTime(3200,t);f.frequency.exponentialRampToValueAtTime(400,t+(dec||.3));env(g,t,.003,lvl*.09,dec||.35);
-  o.connect(f);f.connect(g);out(k,g,.35);o.start(t);o.stop(t+(dec||.35)+.1);}
-function bass(k,n,t,lvl,d){const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='sawtooth';o.frequency.value=N(n);f.type='lowpass';f.frequency.value=380;
-  env(g,t,.01,lvl*.16,d||.4);o.connect(f);f.connect(g);out(k,g,.1);o.start(t);o.stop(t+(d||.4)+.1);}
-function drum(k,t,freq,lvl,d){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(freq*2.2,t);o.frequency.exponentialRampToValueAtTime(freq,t+.08);
-  env(g,t,.002,lvl*.5,d||.5);o.connect(g);out(k,g,.4);o.start(t);o.stop(t+(d||.5)+.05);}
-function noise(k,t,lvl,d,fq,type){const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=noiseBuf;f.type=type||'highpass';f.frequency.value=fq||6000;
-  env(g,t,.002,lvl,d);s.connect(f);f.connect(g);out(k,g,.3);s.start(t,Math.random());s.stop(t+d+.05);}
-function horn(k,n,t,dur,lvl){const o=ctx.createOscillator(),o2=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type='sawtooth';o2.type='sawtooth';o.frequency.value=N(n);o2.frequency.value=N(n);o2.detune.value=9;
-  f.type='lowpass';f.frequency.setValueAtTime(300,t);f.frequency.linearRampToValueAtTime(1300,t+dur*.4);f.frequency.linearRampToValueAtTime(500,t+dur);
-  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(lvl*.05,t+dur*.3);g.gain.linearRampToValueAtTime(0,t+dur);o.connect(f);o2.connect(f);f.connect(g);out(k,g,1);o.start(t);o2.start(t);o.stop(t+dur+.1);o2.stop(t+dur+.1);}
-function startWind(k,lvl){const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain(),l=ctx.createOscillator(),lg=ctx.createGain();
-  s.buffer=noiseBuf;s.loop=true;f.type='bandpass';f.frequency.value=700;f.Q.value=.7;l.frequency.value=.07;lg.gain.value=380;l.connect(lg);lg.connect(f.frequency);
-  g.gain.value=lvl*.07;s.connect(f);f.connect(g);out(k,g,.5);s.start();l.start();return ()=>{try{s.stop();l.stop();}catch(e){}};}
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-function step(k,t){const m=M[k],b=buses[k],spb=60/m.bpm,stepDur=spb/2,s=b.step,bar=Math.floor(s/m.steps),i=s%m.steps,ch=m.chords[bar%m.chords.length];
- const barDur=stepDur*m.steps;
- if(i===0){ if(m.pad) pad(k,ch,t,barDur,m.pad); if(m.drone && bar%2===0) pad(k,m.drone,t,barDur*2,.8); }
- if(m.box && Math.random()<m.box && (i%2===0||Math.random()<.4)){const hi=ch.slice(1).map(n=>n+24);box(k,pick(hi),t,.9);}
- if(m.bell && i===0 && Math.random()<m.bell) box(k,ch[ch.length-1]+12,t+stepDur*Math.floor(Math.random()*4),1,'triangle');
- if(m.drums){ const ii=i%8; bass(k,m.ost[ii],t,1,.18);
-   if(i===0||i===8) drum(k,t,55,1,.6); if(i===4||i===12) drum(k,t,95,.7,.3); if(i===14||i===15) drum(k,t,120,.5,.2);
-   if(i%2===1) noise(k,t,.02,.05,7000);
-   if(i===0 && bar%2===0) ch.slice(1).forEach(n=>pluck(k,n,t,.9,.5)); }
- if(m.horn){ if(bar%4===1||bar%4===3){const h=m.horn.find(x=>x[0]===i); if(h) horn(k,h[1],t,stepDur*2.4,1);} if(m.clink && i===5 && bar%2===0) box(k,93,t,.35,'square'); }
- if(m.pluck){ const pat=[0,null,2,1,0,2,null,1]; const v=pat[i]; if(i%4===0) bass(k,ch[0],t,.8,.3); if(v!==null) pluck(k,ch[1+v]+12,t,.8,.25); if(i===7&&Math.random()<.5) pluck(k,ch[3]+12+2,t+stepDur/2,.6,.2); }
- if(m.jig){ const ii=(bar%4)*12+i, ph=Math.floor(ii/6)%4; if(i%6===0) bass(k,ch[0],t,1,.25); if(i%6===3) pluck(k,ch[1],t,.5,.15);
-   if(i%2===0){ const n=m.jig[(ph*6+(i%6)/2*2)%m.jig.length]; } const jn=m.jig[((bar%4)*6+Math.floor(i/2))%m.jig.length]; if(i%2===0) pluck(k,jn,t,1,.22);
-   if(m.tamb && i%3===0) noise(k,t,i%6===0?.05:.025,.08,5000); }
- b.step++;}
-function tick(){const now=ctx.currentTime;for(const k in buses){const b=buses[k];if(b.g.gain.value<.001&&k!==cur){b.next=0;continue;}
-  if(!b.next||b.next<now) b.next=now+.05; const m=M[k],sd=60/m.bpm/2; while(b.next<now+.2){step(k,b.next);b.next+=sd;}}}
-function setMood(k){ if(!k||k===cur) return; cur=k; lbI.textContent=NAMES[k]||''; if(!ctx) return; const t=ctx.currentTime;
- for(const x in buses){const g=buses[x].g.gain; g.cancelScheduledValues(t); g.setValueAtTime(g.value,t); g.linearRampToValueAtTime(x===k?1:0,t+3.5);
-  if(x===k && M[x].wind && !buses[x].wind) buses[x].wind=startWind(x,M[x].wind);
-  if(x!==k && buses[x].wind){const st=buses[x].wind; buses[x].wind=null; setTimeout(st,4000);} }
- if(buses[k].step%M[k].steps) buses[k].step=0; }
-function setVol(){ if(master) master.gain.setTargetAtTime(on?Math.pow(vol.value/100,1.6)*.9:0,ctx.currentTime,.4); }
-btn.addEventListener('click',e=>{ if(e.target===vol) return; if(!ctx){init();timer=setInterval(tick,40);} ctx.resume(); on=!on;
- ic.textContent=on?'❚❚':'♪'; lbB.textContent=on?'Музыка играет':'Музыка'; if(on){const k=cur||'title';cur=null;setMood(k);} else lbI.textContent='на паузе'; setVol(); });
+function init(){
+ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+ ctx=new AC(); master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination);
+}
+function fade(t,to){
+ if(t.g){ const g=t.g.gain,n=ctx.currentTime; g.cancelScheduledValues(n); g.setValueAtTime(g.value,n); g.linearRampToValueAtTime(to,n+FADE); }
+ else t.a.volume=to;
+ clearTimeout(t._st);
+ if(to===0) t._st=setTimeout(()=>t.a.pause(),FADE*1000+200);
+ else { const p=t.a.play(); if(p&&p.catch) p.catch(()=>{}); }
+}
+function setMood(k){
+ if(!k||k===cur||!NAMES[k]) return; cur=k; lbI.textContent=NAMES[k];
+ if(!on) return;
+ for(const x in tr) if(x!==k) fade(tr[x],0);
+ fade(track(k),1);
+}
+function setVol(){
+ const v=on?Math.pow(vol.value/100,1.6):0;
+ if(master) master.gain.setTargetAtTime(v,ctx.currentTime,.3);
+ else for(const x in tr) tr[x].a.muted=!on;
+}
+btn.addEventListener('click',e=>{
+ if(e.target===vol) return;
+ if(!ctx&&!master) init(); if(ctx) ctx.resume();
+ on=!on; ic.textContent=on?'❚❚':'♪'; lbB.textContent=on?'Музыка играет':'Музыка';
+ if(on){ const k=cur||'title'; cur=null; setMood(k); }
+ else { lbI.textContent='на паузе'; for(const x in tr) fade(tr[x],0); }
+ setVol();
+});
 vol.addEventListener('input',setVol); vol.addEventListener('click',e=>e.stopPropagation());
 // какая часть сейчас на экране
 const secs=[...document.querySelectorAll('[data-mood]')];
