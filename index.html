@@ -1305,11 +1305,11 @@ h2.chap{font-size:clamp(40px,7vw,64px);color:var(--red)}
 <p>— Они ответили, — сказал он. — Мне.</p>
 </section>
 <section class="page" data-mood="city" aria-label="Продолжение следует">
-  <div class="frame"><div class="orn" aria-hidden="true">✦</div><p class="small">продолжение следует</p><p class="note">глава седьмая скоро</p><p><a href="#top" style="color:var(--red)">↑ к началу книги</a></p><p class="small" style="margin-top:2em;opacity:.75">Музыка: Kevin MacLeod (incompetech.com), лицензия CC BY 4.0: «Teller of the Tales», «Achaidh Cheide», «Frost Waltz», «Galway», «Midnight Tale», «Thatched Villagers», «Master of the Feast», «Minstrel Guild».</p></div>
+  <div class="frame"><div class="orn" aria-hidden="true">✦</div><p class="small">продолжение следует</p><p class="note">глава седьмая скоро</p><p><a href="#top" style="color:var(--red)">↑ к началу книги</a></p><p class="small" style="margin-top:2em;opacity:.75">Музыка: Epidemic Sound («Crowned Kings», «Vagabond’s Awakening», «Stepping Stones», «Treasure Hunt», «On the Map’s Edge», «Merry on the Moor», «Jig on the Brig», «Castle Festivities») и Kevin MacLeod (incompetech.com), лицензия CC BY 4.0: «Teller of the Tales», «Achaidh Cheide», «Frost Waltz», «Galway», «Midnight Tale», «Thatched Villagers», «Master of the Feast», «Minstrel Guild».</p></div>
 </section>
 </main>
 <button id="mus" type="button" aria-label="Музыка"><span class="ic">♪</span><span class="lb"><b>Музыка</b><i>нажми, чтобы включить</i></span><input type="range" min="0" max="100" value="55" aria-label="Громкость"></button>
-<script>// Саундтрек книги: живые записи (Kevin MacLeod, incompetech.com, CC BY 4.0), своя тема на каждую часть главы.
+<script>// Саундтрек книги: Epidemic Sound + Kevin MacLeod (incompetech.com, CC BY 4.0); на каждую часть главы два трека по очереди.
 (function(){
 const btn=document.getElementById('mus'), vol=btn.querySelector('input'), lbB=btn.querySelector('b'), lbI=btn.querySelector('i'), ic=btn.querySelector('.ic');
 const NAMES={title:'Пролог',forest:'Снежный лес',night:'Ночь в горах',fight:'Драка',mountain:'Гора',farm:'Ферма',tavern:'Таверна «Гусь и корона»',city:'Ратвальд'};
@@ -1317,7 +1317,9 @@ const FADE=2.5;
 let ctx=null, master=null, on=false, cur=null; const tr={};
 function track(k){
  if(tr[k]) return tr[k];
- const a=new Audio('music/'+k+'.mp3'); a.loop=true; a.preload='auto';
+ const list=['music/'+k+'_es.mp3','music/'+k+'.mp3']; let i=0;
+ const a=new Audio(list[0]); a.preload='auto';
+ a.addEventListener('ended',()=>{ i=(i+1)%list.length; a.src=list[i]; const p=a.play(); if(p&&p.catch) p.catch(()=>{}); });
  const t={a,g:null}; tr[k]=t;
  if(ctx){ const s=ctx.createMediaElementSource(a); t.g=ctx.createGain(); t.g.gain.value=0; s.connect(t.g); t.g.connect(master); }
  return t;
