@@ -1,259 +1,95 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Герои Дамбалдура</title>
+<title>Действующие лица</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Podkova:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ruslan+Display&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Neucha&display=swap">
 <style>
-/* Layout: one narrow column; a vertical trunk on the left; chapters are nodes on it, questions are branches off it. */
+/* Layout: книжный разворот «Действующие лица» — кремовая бумага, у каждого героя портрет в рамке и короткий книжный текст; чередуем стороны. Один «бумажный» вид. */
 :root{
-  --bg:#f3f5f4; --panel:#ffffff; --ink:#1d2624; --dim:#5d6b67; --line:#c9d2cf;
-  --done:#2f7d5b; --plan:#7b8894; --ask:#c2410c; --ask-bg:#fff4ec; --pick:#1d2624; --pick-ink:#ffffff;
-  --f-d:"Podkova",Georgia,serif; --f-b:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --paper:#f3ead6; --ink:#2b2117; --dim:#6f5f49; --rule:#cdb995; --lava:#b4501d;
+  --f-title:"Ruslan Display","PT Serif",Georgia,serif; --f-body:"PT Serif",Georgia,serif; --f-hand:"Neucha","PT Serif",Georgia,serif;
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#141a19; --panel:#1c2423; --ink:#e8eeec; --dim:#9aa8a4; --line:#34403d;
-  --done:#5fc496; --plan:#8794a0; --ask:#ff9d5c; --ask-bg:#2a1f17; --pick:#e8eeec; --pick-ink:#141a19; color-scheme:dark } }
-:root[data-theme="dark"]{
-  --bg:#141a19; --panel:#1c2423; --ink:#e8eeec; --dim:#9aa8a4; --line:#34403d;
-  --done:#5fc496; --plan:#8794a0; --ask:#ff9d5c; --ask-bg:#2a1f17; --pick:#e8eeec; --pick-ink:#141a19; color-scheme:dark }
-body{background:var(--bg);color:var(--ink);font-family:var(--f-b);font-size:16px;line-height:1.45}
-.wrap{max-width:720px;margin:0 auto;padding-block:28px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1{font-family:var(--f-d);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.1;margin:0 0 6px;text-wrap:balance}
-.sub{color:var(--dim);margin:0 0 18px;max-width:60ch}
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--dim);margin-bottom:22px}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.dot{width:12px;height:12px;border-radius:50%;flex:none;border:2px solid var(--plan);background:var(--bg)}
-.dot.done{background:var(--done);border-color:var(--done)}
-.dot.ask{border-color:var(--ask);background:var(--ask)}
-.six{background:var(--panel);border:1px solid var(--line);padding:14px 16px;margin-bottom:26px}
-.six h2{font-family:var(--f-d);font-size:20px;margin:0 0 8px}
-.six ol{margin:0;padding-left:1.3em;display:grid;gap:5px}
-.tree{position:relative;padding-left:30px}
-.tree::before{content:"";position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:var(--line)}
-.part{font-family:var(--f-d);font-weight:700;font-size:24px;margin:34px 0 12px;position:relative}
-.part small{display:block;font-family:var(--f-b);font-weight:400;font-size:14px;color:var(--dim)}
-.part::before{content:"";position:absolute;left:-27px;top:9px;width:16px;height:2px;background:var(--ink)}
-.ch{position:relative;margin:0 0 10px;min-width:0}
-.ch::before{content:"";position:absolute;left:-26px;top:5px;width:10px;height:10px;border-radius:50%;border:2px solid var(--plan);background:var(--bg)}
-.ch.done::before{background:var(--done);border-color:var(--done)}
-.ch b{font-weight:600}
-.ch .n{font-variant-numeric:tabular-nums;color:var(--dim);margin-right:6px}
-.ch p{margin:1px 0 0;color:var(--dim);font-size:15px}
-.q{position:relative;margin:12px 0 18px;background:var(--ask-bg);border:1.5px dashed var(--ask);padding:12px 14px;min-width:0}
-.q::before{content:"?";position:absolute;left:-31px;top:10px;width:20px;height:20px;border-radius:50%;background:var(--ask);color:var(--bg);font-weight:700;font-size:14px;display:grid;place-items:center}
-.q.answered{border-style:solid}
-.q.answered::before{content:"✓";background:var(--done)}
-.q .sit{margin:0 0 6px;font-size:15px}
-.q .ask{margin:0 0 10px;font-weight:600}
-.opts{display:grid;gap:6px}
-.opts button{font:inherit;text-align:left;background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 12px;cursor:pointer;border-radius:4px}
-.opts button:hover{border-color:var(--ink)}
-.opts button:focus-visible,.note:focus-visible,.bar button:focus-visible{outline:2px solid var(--ask);outline-offset:2px}
-.opts button[aria-pressed="true"]{background:var(--pick);color:var(--pick-ink);border-color:var(--pick)}
-.opts button i{font-style:normal;color:var(--ask);font-size:13px;margin-left:6px}
-.opts button[aria-pressed="true"] i{color:inherit;opacity:.8}
-.note{font:inherit;width:100%;box-sizing:border-box;margin-top:8px;padding:8px 10px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;min-height:40px;resize:vertical}
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);z-index:5;
-  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.bar div{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.bar span{flex:1;min-width:0;font-size:14px;color:var(--dim)}
-.bar strong{color:var(--ink);font-variant-numeric:tabular-nums}
-.bar button{font:inherit;font-weight:600;background:var(--pick);color:var(--pick-ink);border:0;padding:9px 14px;border-radius:4px;cursor:pointer}
-#out{width:100%;box-sizing:border-box;margin-top:14px;font:inherit;font-size:14px;min-height:160px;background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding-block:56px 96px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+header{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.kick{font-family:var(--f-hand);color:var(--lava);font-size:17px;letter-spacing:.08em}
+h1{font-family:var(--f-title);font-weight:400;font-size:clamp(34px,6vw,58px);margin:0;line-height:1.05}
+.orn{width:120px;height:1px;background:var(--rule);position:relative}
+.orn::after{content:"✦";position:absolute;left:50%;top:-12px;transform:translateX(-50%);background:var(--paper);padding:0 10px;color:var(--lava)}
+.intro{max-width:36em;font-style:italic;color:var(--dim)}
+.hero{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:center}
+.hero:nth-of-type(even){grid-template-columns:1fr 240px}
+.hero:nth-of-type(even) figure{order:2}
+figure{margin:0;background:#fffaf0;padding:10px;border:1px solid var(--rule);box-shadow:0 8px 24px rgba(70,50,20,.15)}
+figure img{display:block;width:100%;height:auto}
+.txt{display:flex;flex-direction:column;gap:8px;min-width:0}
+h2{font-family:var(--f-title);font-weight:400;font-size:clamp(26px,4vw,36px);margin:0;line-height:1.1}
+.role{font-family:var(--f-hand);font-size:18px;color:var(--lava)}
+.txt p{margin:0}
+.quirk{font-family:var(--f-hand);font-size:17px;color:var(--dim);border-top:1px dashed var(--rule);padding-top:8px}
+.team{text-align:center;font-style:italic;color:var(--dim);max-width:34em;margin:0 auto}
+@media (max-width:640px){.hero,.hero:nth-of-type(even){grid-template-columns:1fr}.hero:nth-of-type(even) figure{order:0}figure{max-width:260px;margin:0 auto}}
 </style>
 </head><body>
 
 
 <div class="wrap">
-  <h1>Герои</h1>
-  <p class="sub">Каждый герой книги: кто он, что у него внутри, как мы его показываем и зачем он нужен истории. Там, где решать вам, стоит вопрос. Нажмите вариант или напишите свой: ответ сохранится сам.</p>
-  <div class="legend">
-    <span><span class="dot done"></span>ваши слова и решения</span>
-    <span><span class="dot"></span>моё предложение</span>
-    <span><span class="dot ask"></span>вопрос к вам</span>
+<header>
+  <span class="kick">Дамбалдур Трампампур · книга первая</span>
+  <h1>Действующие лица</h1>
+  <div class="orn" aria-hidden="true"></div>
+  <figure class="teamshot" style="margin:8px 0 0;max-width:100%"><img src="img/team.jpg" alt="Вся команда на горной тропе на закате"></figure>
+  <p class="intro">Пятеро путников в чужом мире. Ни один из них не знает, кем станет. Зато все точно знают, у кого бутерброды.</p>
+</header>
+
+<section class="hero">
+  <figure><img src="img/dambaldur.jpg" alt="Дамбалдур Трампампур"></figure>
+  <div class="txt">
+    <h2>Дамбалдур Трампампур</h2><span class="role">дворф-воин, умеет ковать</span>
+    <p>Рыжая борода — его гордость, нос — его гордость поменьше. Ворчит на всё на свете: на плохую ковку, на сложную магию и на тех, кто не любит бутерброды. Но если ты стал его другом — он за тебя пробьёт любую стену. А иногда и потолок. Головой.</p>
+    <p class="quirk">Хлопнет, топнет — и случится маленькое чудо. Боится только одного: что бутерброд закончится.</p>
   </div>
-  <div class="six">
-    <h2>Главная мысль о героях</h2>
-    <ol>
-      <li>Враг кормится ссорой. Поэтому он шепчет каждому герою самое обидное.</li>
-      <li>У каждого героя есть больное место. Туда враг и шепчет.</li>
-      <li>В конце каждый побеждает тем, чего раньше стеснялся: гном добротой, Элира правдой, Римуру спокойствием, Теона промахом, Гэгрин своей половиной.</li>
-      <li>Над чем мы смеёмся в начале, тем герои спасают всех в конце.</li>
-    </ol>
-    <p style="margin:8px 0 0;font-size:14px;color:var(--dim)">Это моё предложение, собранное из ваших рассказов о героях.</p>
+</section>
+
+<section class="hero">
+  <figure><img src="img/mage.jpg" alt="Маг Римуру"></figure>
+  <div class="txt">
+    <h2>Римуру</h2><span class="role">тихий маг, капитан команды</span>
+    <p>Умный, спокойный, немногословный. Улыбается, когда шутят другие, а сам шутит так тихо, что не все замечают. Его магия странная: он делает вещи тяжёлыми или лёгкими и плетёт цепи из чернильной тьмы. Мечтает, чтобы гномы, эльфы и все-все наконец подружились.</p>
+    <p class="quirk">Пальцы всегда в чернилах. В кармане — бутерброд, который Дамбалдур заставил его съесть.</p>
   </div>
-  <div class="tree" id="tree"></div>
-  <textarea id="out" hidden readonly aria-label="Ваши ответы текстом"></textarea>
+</section>
+
+<section class="hero">
+  <figure><img src="img/elira.jpg" alt="Элира"></figure>
+  <div class="txt">
+    <h2>Элира</h2><span class="role">эльфийка-лучница, следопыт</span>
+    <p>Выглядит юной, а говорит иногда как древняя бабушка: «в мои-то годы…». Всегда знает, куда идти, где спрятаться и откуда стрелять. Однажды она забыла всех своих старых друзей — и теперь бережёт новых больше всего на свете.</p>
+    <p class="quirk">В косичке — бусина за каждого друга. В кармане — кусочек бутерброда, утащенный у Дамбалдура.</p>
+  </div>
+</section>
+
+<section class="hero">
+  <figure><img src="img/teona.jpg" alt="Теона"></figure>
+  <div class="txt">
+    <h2>Теона</h2><span class="role">храмовница света, самая младшая</span>
+    <p>Добрая, вежливая, лучшая ученица своего храма. Лечит светом и варит снадобья из трав. А ещё у неё моргенштерн больше её самой, с огненным сердцем внутри. Она почти всегда промахивается — и поэтому научилась промахиваться нарочно, чтобы попасть.</p>
+    <p class="quirk">После каждого удара извиняется. Даже перед чудищами.</p>
+  </div>
+</section>
+
+<section class="hero">
+  <figure><img src="img/orc.jpg" alt="Орк-маг"></figure>
+  <div class="txt">
+    <h2>Орк-маг</h2><span class="role">новый друг, маг и шаман</span>
+    <p>Огромный, спокойный, бродит сам по себе и разговаривает с камнями. Колдует по-настоящему — только половину своих заклинаний сам не понимает. Хотел вызвать бурю — получил тучку, которая льёт суп прямо в котёл. Отличный повар и вечный соперник Дамбалдура в споре, чей бутерброд лучше.</p>
+    <p class="quirk">Книгу заклинаний читает вверх ногами. Работает.</p>
+  </div>
+</section>
+
+<p class="team">Вместе они команда. Пятый пока где-то варит суп.</p>
 </div>
-<div class="bar"><div><span id="status">Отвечено <strong id="cnt">0</strong> из <strong id="tot">0</strong></span><button type="button" id="copy">Показать ответы текстом</button></div></div>
-
-<script>
-const T = [
- {"part": "Дамбалдур", "note": "добрый, который прячет доброту"},
- {"row": "Кто он", "line": "Суперсильный гном, воин и кузнец. Ему вечно что-то не нравится, он ворчит, но он очень добрый и это скрывает. Друзья для него главное.", "done": 1},
- {"row": "Что у него внутри", "line": "Хочет домой, но не знает, где дом. Гора тянет его, а он сам не понимает почему.", "done": 1},
- {"row": "Как мы его показываем", "line": "Только делом. Другу плохо: сделал бутерброд, буркнул «что случилось?» и сразу «Всё, я пошёл, всё исправлю». Поймали на доброте, ворчит ещё громче.", "done": 1},
- {"row": "Над чем смеёмся", "line": "Не рассчитывает силу: летит, врезается в дерево, пробивает головой потолок. Гномья магия у него целый номер: губы, щёки, уши, пузо.", "done": 1},
- {"row": "Куда ему шепчет враг", "line": "«Ты и сам не знаешь, чей ты». А в горе все любят его деда, а не его самого.", "done": 0},
- {"row": "Зачем он книге", "line": "Он чинит. Сначала балки и двери, в конце ссору двух народов. И король из него выходит свой: сначала починить, потом поворчать.", "done": 0},
- {"row": "В горе", "line": "Гномы принимают его за деда-короля. Он сам говорит им правду, хоть и жалко их расстраивать. Гномы: «Внук так внук. Потолок-то пробил как дед».", "done": 1},
- {"row": "Его путь", "line": "Ищет дом → отдаёт бутерброд голодному эльфу → становится королём понарошку → первым смеётся и первым прощает.", "done": 0},
- {"part": "Элира", "note": "помнит всё, кроме себя"},
- {"row": "Кто она", "line": "Гордая и добрая эльфийка, лучница и лучший следопыт. С гномом вечно спорит и подкалывает его, с любовью. Ради друзей прыгнет в любую опасность.", "done": 1},
- {"row": "Что у неё внутри", "line": "Когда-то она забыла всех прежних друзей. Самое страшное для неё: снова потерять друзей.", "done": 1},
- {"row": "Как мы её показываем", "line": "В волосах бусина на каждого друга, ночью она повторяет их имена. Таскает кусочки у гнома. Говорит «в мои-то годы», хотя на вид ей двадцать.", "done": 0},
- {"row": "Над чем смеёмся", "line": "Её колкости гному. И то, что она оказалась старше бабушки.", "done": 0},
- {"row": "Куда ей шепчет враг", "line": "«Скажешь правду, потеряешь друзей».", "done": 0},
- {"row": "Зачем она книге", "line": "С её шутки началась ссора народов, ей её и заканчивать. Она мост: эльфийка, у которой лучший друг гном. Их дружба повторяет ту, старую.", "done": 0},
- {"row": "Её путь", "line": "Находит всех по следам → узнаёт, что её звали Ель → вспоминает про бутерброд и боится сказать → говорит правду перед двумя народами.", "done": 0},
- {"row": "Чем кончит", "line": "Идёт дальше с друзьями. Её дерево цветёт и ждёт: теперь ей есть куда вернуться.", "done": 1},
- {"part": "Римуру", "note": "самый сильный, которому нельзя злиться"},
- {"row": "Кто он", "line": "Капитан. Суперспокойный, ровный, говорит редко. Но когда говорит, он знает, что делать, и видит то, чего не видят другие. Любит, когда в команде хохма: тогда улыбается.", "done": 1},
- {"row": "Что у него внутри", "line": "Он тёмный маг. Если его разозлить, он страшен так, что пугаются даже друзья. И тайна: внутри он не человек, а живые чернила. В этой книге её знает одна Теона, друзья узнают во второй.", "done": 1},
- {"row": "Его мечта", "line": "Мир, в котором всем есть место, и монстрам тоже. Союз гномов, эльфов и остальных.", "done": 1},
- {"row": "Как мы его показываем", "line": "Одно слово, и все поворачивают. Магия возвращается к нему понемногу. Его тайну случайно увидела одна Теона и молчит.", "done": 0},
- {"row": "Над чем смеёмся", "line": "Сухие ответы без улыбки: «Нас несли туда, куда мы шли».", "done": 0},
- {"row": "Куда ему шепчет враг", "line": "«Я знаю, что ты такое. Злись, и вся сила вернётся».", "done": 0},
- {"row": "Зачем он книге", "line": "Мир гномов и эльфов это его мечта, которая сбывается. А его урок самый трудный: врага кормит злость, значит, самый сильный должен не злиться.", "done": 0},
- {"row": "Его путь", "line": "Без магии, но капитан → говорит с эльфами за всех → слышит шёпот врага → его гнев едва не губит всех, останавливает Теона → «Это начало союза».", "done": 0},
- {"row": "Что нашла проверка", "line": "Сейчас у него одна краска: молчит, замечает, считает. Нужны одна смешная минута в каждой главе и его мечта вслух.", "done": 0},
- {"part": "Теона", "note": "«самая слабая», у которой главный удар"},
- {"row": "Кто она", "line": "Самая младшая, «как ребёнок в пати». Добрая храмовница с огромным моргенштерном. Правила говорит вслух: «Правило шестое…»", "done": 1},
- {"row": "Что у неё внутри", "line": "В храме говорили, что она самая слабая. Никто не знал, что она невероятно сильная и просто промахивается.", "done": 1},
- {"row": "Как мы её показываем", "line": "Извиняется перед каждым, в кого целится, даже перед ёлкой. В живое её шар не идёт никогда: садится рядом.", "done": 0},
- {"row": "Над чем смеёмся", "line": "Вежливость посреди драки: «Простите, у нас ремонт». Снесла сарай и смутилась.", "done": 0},
- {"row": "Куда ей шепчет враг", "line": "«Ты самая слабая. Промажешь, как всегда».", "done": 0},
- {"row": "Зачем она книге", "line": "Она одна бьёт без злости, поэтому врагу страшен именно её удар. Её промах и есть главный удар книги.", "done": 1},
- {"row": "Её путь", "line": "Мажет и извиняется → лечит эльфят и хранит тайну капитана → останавливает гнев Римуру → бьёт по зубилу.", "done": 0},
- {"row": "Чем кончит", "line": "Ей больше нечего доказывать храму. Гном говорит «Дураки у тебя в храме», и она впервые сама над этим смеётся.", "done": 1},
- {"part": "Гэгрин", "note": "орк; половина, которая ищет вторую"},
- {"row": "Имя", "line": "Гэгрин. Имя выбрали вы, в честь вашего орка GG Green. В главах 5–9 пока стоит старое имя, заменю вместе с десятой главой.", "done": 1},
- {"row": "Кто он", "line": "Огромный спокойный орк, маг и повар. Колдует по-настоящему, но половину сам не понимает.", "done": 1},
- {"row": "Что у него внутри", "line": "Он один. Понимает камни наполовину и ищет вторую половину.", "done": 1},
- {"row": "Вторая половина", "line": "Это друзья: гном слышит в камнях то, чего не слышит он. Искал половину, а нашёл команду.", "done": 1},
- {"row": "Как мы его показываем", "line": "Хотел гром, а вышла тучка, из которой льётся суп. Тучка ходит за ним, как собака. Книгу читает вверх ногами: «Так буквы не убегают».", "done": 0},
- {"row": "Над чем смеёмся", "line": "Всё понимает буквально. Спорит с гномом, чей суп лучше.", "done": 0},
- {"row": "Куда ему шепчет враг", "line": "Шёпот врага он тоже понимает только наполовину, и обидное до него не доходит. На него одного шёпот не действует.", "done": 0},
- {"row": "Зачем он книге", "line": "Он первый слышит имя врага, просто не знает, что это имя. И он показывает: тот, кто не такой, как все, тоже свой за общим столом.", "done": 0},
- {"row": "Его путь", "line": "Один у костра с тучкой → пятый в команде → складывает с гномом две половины: «раздуй» это имя → получает настоящий гром.", "done": 0},
- {"row": "Что нашла проверка", "line": "Самый бледный герой: ничему не удивляется, ничего не хочет, смешное за него делает тучка.", "done": 0},
- {"part": "Рева", "note": "друг, который ждёт"},
- {"row": "Кто он", "line": "Гном, друг Дамбалдура. Вместе они ковали доспехи и моргенштерн Теоны.", "done": 1},
- {"row": "Где он", "line": "В горе. Гномы держат его как гостя и не выпускают, пока не придёт король.", "done": 1},
- {"row": "Какой он", "line": "Весёлый болтун: за две недели рассказал гномам про Дамбалдура сто историй, и половину приврал.", "done": 1},
- {"row": "Как мы его показываем", "line": "Полкниги его не видно, слышен только стук «удар, два, удар». Гном отвечает тем же стуком.", "done": 0},
- {"row": "Зачем он книге", "line": "Он то, ради чего друзья идут к горе. И он один в горе знает гнома настоящим, а не «великим».", "done": 0},
- {"row": "Что нашла проверка", "line": "Дети знают его стук, но не знают его самого. По нему трудно скучать.", "done": 0},
- {"part": "Раздуй", "note": "враг, которого нельзя побить"},
- {"row": "Кто он", "line": "Тот, кто кормится ссорой: огненное существо в глубине горы. Чем сильнее злятся гномы и эльфы, тем он больше.", "done": 1},
- {"row": "Характер", "line": "Страшный, пока большой, и смешной, когда сжимается.", "done": 1},
- {"row": "Как мы его показываем", "line": "Сам не дерётся. Шепчет каждому самое обидное, и почти ласково. От смеха и от «извини» гаснет.", "done": 0},
- {"row": "Зачем он книге", "line": "Из-за него последний бой смешной: злиться нельзя, драться надо вежливо. Побеждают не силой, а дружбой.", "done": 0},
- {"row": "Чем кончит", "line": "Станет угольком в очаге: дуется, но греет суп.", "done": 1},
- {"part": "Дракон", "note": "сосед, с которым сто лет никто не говорил"},
- {"row": "Кто он", "line": "Друг гномов. Хочет дружить. Даёт огонь для обсидианового молота. Письмо о мире попадает к нему по ошибке.", "done": 1},
- {"row": "Какой он", "line": "Огромный и одинокий: сто лет ему никто не писал, и чужое письмо для него праздник.", "done": 1},
- {"row": "Зачем он книге", "line": "Он один помнит день взрыва и может сказать: виноваты не гномы и не эльфы.", "done": 0},
- {"part": "Кто с кем", "note": "пары, на которых держится книга"},
- {"row": "Гном и Элира", "line": "Спорят и подкалывают друг друга, с любовью. Главная пара книги.", "done": 1},
- {"row": "Гном и Римуру", "line": "Шумный и тихий. Заботятся друг о друге вещами: кусок хлеба, дрова, рукавицы.", "done": 0},
- {"row": "Теона и Римуру", "line": "Она хранит его тайну. Она же остановит его гнев.", "done": 0},
- {"row": "Гном и Гэгрин", "line": "Два повара и две половины.", "done": 0},
- {"row": "Элира и Теона", "line": "Как старшая и младшая сестра. С шестой главы они почти не разговаривают, это надо вернуть.", "done": 0},
- {"row": "Гном и Рева", "line": "Стук за двоих.", "done": 0},
- {"part": "Что поправить в написанных главах", "note": "вы сказали: внести вместе с десятой главой"},
- {"row": "Гном", "line": "В главах 7–9 он ни разу не улетел и не пробил потолок. Вернуть: например, в эльфийской клетке.", "done": 0},
- {"row": "Гэгрин", "line": "Дать ему удивиться и обрадоваться вслух. Вспомнить уговор про две половины.", "done": 0},
- {"row": "Римуру", "line": "Одна смешная минута на главу. На суде эльфов сказать его мечту вслух: «Места хватит всем».", "done": 0},
- {"row": "Теона", "line": "Когда эльфы зовут её «госпожа», вспомнить храм, где её звали иначе.", "done": 0}
-];
-
-const tree = document.getElementById("tree");
-const QS = T.filter(x => x.q);
-const state = {};            // qid -> {choice:Number|null, note:String}
-const els = {};              // qid -> {box, buttons[], note}
-document.getElementById("tot").textContent = QS.length;
-
-function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-
-for (const x of T){
-  if (x.part){ const h = el("div","part",x.part); h.appendChild(el("small",null,x.note)); tree.appendChild(h); }
-  else if (x.row){
-    const d = el("div","ch" + (x.done ? " done" : ""));
-    const b = el("b",null,x.row);
-    d.appendChild(b); d.appendChild(el("p",null,x.line)); tree.appendChild(d);
-  } else {
-    const box = el("div","q"); box.appendChild(el("p","sit",x.sit)); box.appendChild(el("p","ask",x.ask));
-    const opts = el("div","opts"); const buttons = [];
-    x.opts.forEach((o,i) => {
-      const bt = el("button",null,o); bt.type = "button"; bt.id = "q-" + x.q + "-" + i; bt.setAttribute("aria-pressed","false");
-      if (i === x.rec) bt.appendChild(el("i",null,"мой совет"));
-      bt.addEventListener("click", () => pick(x.q, i)); opts.appendChild(bt); buttons.push(bt);
-    });
-    box.appendChild(opts);
-    const note = el("textarea","note"); note.id = "n-" + x.q; note.rows = 1; note.placeholder = "Свой вариант или уточнение";
-    note.setAttribute("aria-label","Свой вариант: " + x.ask);
-    let tm; note.addEventListener("input", () => { clearTimeout(tm); tm = setTimeout(() => setNote(x.q, note.value), 900); });
-    box.appendChild(note); tree.appendChild(box); els[x.q] = {box, buttons, note};
-  }
-}
-
-function paint(){
-  let n = 0;
-  for (const x of QS){
-    const s = state[x.q] || {}; const e = els[x.q];
-    e.buttons.forEach((b,i) => b.setAttribute("aria-pressed", s.choice === i ? "true" : "false"));
-    if (document.activeElement !== e.note && typeof s.note === "string" && e.note.value !== s.note) e.note.value = s.note;
-    const done = (s.choice != null) || (s.note && s.note.trim());
-    e.box.classList.toggle("answered", !!done); if (done) n++;
-  }
-  document.getElementById("cnt").textContent = n;
-  const out = document.getElementById("out"); if (!out.hidden) out.value = asText();
-}
-function asText(){
-  return QS.map(x => { const s = state[x.q] || {};
-    const a = s.choice != null ? x.opts[s.choice] : "(нет выбора)";
-    return x.ask + "\n→ " + a + (s.note && s.note.trim() ? "\n   Своё: " + s.note.trim() : "");
-  }).join("\n\n");
-}
-
-let db = null; const queue = {}; const busy = {};
-function local(){ try { localStorage.setItem("heroes-answers", JSON.stringify(state)); } catch(e){} }
-async function save(qid){
-  local(); if (!db) return;
-  if (busy[qid]) { queue[qid] = true; return; }
-  busy[qid] = true;
-  const x = QS.find(q => q.q === qid); const s = state[qid] || {};
-  try {
-    await db.doc("answers/" + qid).set({ question: x.ask, choice: s.choice == null ? null : s.choice,
-      answer: s.choice == null ? "" : x.opts[s.choice], note: s.note || "", at: new Date().toISOString() });
-    setStatus("Сохранено");
-  } catch(e){ setStatus("Не сохранилось в облако. Нажмите «Показать ответы текстом» и пришлите их в чат."); }
-  busy[qid] = false; if (queue[qid]) { queue[qid] = false; save(qid); }
-}
-let stTimer;
-function setStatus(msg){ const st = document.getElementById("status"); const keep = st.querySelector("em") || st.appendChild(el("em")); keep.style.fontStyle = "normal"; keep.textContent = " · " + msg; clearTimeout(stTimer); stTimer = setTimeout(() => keep.textContent = "", 4000); }
-function pick(qid, i){ const s = state[qid] || (state[qid] = {choice:null, note:""}); s.choice = (s.choice === i) ? null : i; paint(); save(qid); }
-function setNote(qid, v){ const s = state[qid] || (state[qid] = {choice:null, note:""}); if (s.note === v) return; s.note = v; paint(); save(qid); }
-
-document.getElementById("copy").addEventListener("click", () => {
-  const out = document.getElementById("out"); out.hidden = false; out.value = asText(); out.scrollIntoView({block:"center"}); out.select();
-  if (navigator.clipboard) navigator.clipboard.writeText(out.value).then(() => setStatus("Скопировано"), () => {});
-});
-
-try { const saved = JSON.parse(localStorage.getItem("heroes-answers") || "{}"); for (const k in saved) if (els[k]) state[k] = saved[k]; } catch(e){}
-paint();
-
-(async () => {
-  db = window.claude && window.claude.use ? await window.claude.use("db") : null;
-  if (!db) return;
-  db.collection("answers").onSnapshot(snap => {
-    if (snap.metadata && snap.metadata.hasPendingWrites) return;
-    snap.docs.forEach(d => { const v = d.data(); if (!v || !els[d.id] || busy[d.id]) return;
-      state[d.id] = { choice: (typeof v.choice === "number") ? v.choice : null, note: typeof v.note === "string" ? v.note : "" }; });
-    paint();
-  }, () => {});
-})();
-</script>
 
 </body></html>
